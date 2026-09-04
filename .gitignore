@@ -1,0 +1,39 @@
+# ==== 密钥与凭据（绝不提交） ====
+.env
+.env.*
+*.env
+!.env.example
+**/.env
+**/.env.*
+
+# ==== 敏感/本地密钥文件 ====
+*.key
+*.pem
+*.p12
+*.pfx
+.credentials
+secrets.yaml
+secrets.yml
+
+# ==== 运行时缓存 / 日志 / 系统垃圾 ====
+__pycache__/
+*.py[cod]
+*.log
+.DS_Store
+Thumbs.db
+*.ipynb_checkpoints/
+
+# ==== 数据与回测结果（可能私密 / 体积大，不进仓库） ====
+**/data/
+**/archive/
+**/results/
+*.csv
+*.xlsx
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# ==== 编辑器 / IDE ====
+.idea/
+.vscode/
