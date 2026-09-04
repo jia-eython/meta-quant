@@ -9,14 +9,7 @@ from __future__ import annotations
 import sys, math, time
 from datetime import datetime, time as dtime
 import numpy as np, pandas as pd
-import os
-# 可配置：AutoFolio 的 scripts 目录(含 webull_client 封装)
-_AUTOFOLIO = os.environ.get("AUTOFOLIO_SCRIPTS", r"")
-if not os.path.isdir(_AUTOFOLIO):
-    raise SystemExit("找不到 AutoFolio 的 scripts 目录(webull_client)。请设置环境变量 AUTOFOLIO_SCRIPTS 指向 AutoFolio/scripts")
-sys.path.insert(0, _AUTOFOLIO)
-from webull_client import WebullClient
-from webull.data.common.category import Category
+from quant_data import fetch_m5  # noqa: E402  自包含数据层
 
 def norm(x): return 0.5*(1+math.erf(x/math.sqrt(2)))
 def bs(S,K,sigma,t):
@@ -25,29 +18,9 @@ def bs(S,K,sigma,t):
     d1=(math.log(S/K)+0.5*sigma*sigma*t)/(sigma*math.sqrt(t))
     return S*norm(d1)-K*norm(d1-sigma*math.sqrt(t))
 
-def fetch_m5(client,start,end):
-    frames=[]; end_ms=None
-    for page in range(45):
-        if end_ms is None:
-            r=client.data.market_data.get_history_bar(symbol="META",category=Category.US_STOCK.name,timespan="M5",count="1200")
-        else:
-            r=client.data.market_data.get_history_bar(symbol="META",category=Category.US_STOCK.name,timespan="M5",count="1200",end_time=end_ms)
-        d=r.json(); b=d if isinstance(d,list) else (d.get("data") if isinstance(d,dict) else None)
-        if isinstance(b,dict): b=b.get("items")
-        if not b: break
-        bdf=pd.DataFrame(b); bdf["dt"]=pd.to_datetime(bdf["time"],utc=True).dt.tz_convert("America/New_York").dt.tz_localize(None)
-        frames.append(bdf); mn=bdf["dt"].min()
-        if mn <= pd.Timestamp(start): break
-        end_ms=int(mn.tz_localize("America/New_York").timestamp()*1000)-1
-        time.sleep(0.4)
-        if len(bdf)<1200: break
-    out=pd.concat(frames).drop_duplicates("dt").sort_values("dt").reset_index(drop=True)
-    out=out[(out["dt"]>=pd.Timestamp(start))&(out["dt"]<=pd.Timestamp(end))]
-    return out
-
 def main():
-    client=WebullClient(); start="2024-03-15"; end="2026-09-02"
-    m5=fetch_m5(client,start,end)
+    start="2024-03-15"; end="2026-09-02"
+    m5=fetch_m5(start,end)
     print("M5 bars:",len(m5)," range:",m5["dt"].min(),"~",m5["dt"].max())
     if m5.empty: return
     for c in ("open","close","high","low","volume"): m5[c]=pd.to_numeric(m5[c],errors="coerce")

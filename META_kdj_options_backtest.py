@@ -26,14 +26,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-import os
-
-# 可配置：quant-backtest 数据层目录（本机缺省路径 → 用环境变量覆盖）
-SKILL_DIR = os.environ.get("QUANT_BACKTEST_DIR", r"")
-if not os.path.isdir(SKILL_DIR):
-    raise SystemExit("找不到 quant-backtest 数据层目录。请设置环境变量 QUANT_BACKTEST_DIR 指向 skills/quant-backtest/scripts")
-sys.path.insert(0, SKILL_DIR)
-from data_source import load_daily  # noqa: E402
+from quant_data import load_daily  # noqa: E402  自包含数据层
 
 
 def kdj(df: pd.DataFrame, n: int = 9, m1: int = 3, m2: int = 3):

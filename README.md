@@ -10,11 +10,13 @@
 | `量化策略全景与最佳方法.md` | 策略生态分类、外部研究方法论（walk-forward / 样本外 / 成本 / 防过拟合 / Deflated Sharpe）、新策略 10 项评分卡 |
 | `META_kdj_options_backtest.py` | KDJ(9,3,3) 金叉死叉 + 止损回测（验证 KDJ 在单票趋势里偏弱势） |
 | `META_末日期权模型回测.py` | 用真实 META M5 分钟线 + Black-Scholes 合成“当日到期平值call”，回测“开盘买 → 止盈/止损卖出”（618 个交易日，全部组合期望为负） |
+| `quant_data.py` | 自包含数据层：用 Webull 沙盒拉取 META 日线 / M5；密钥从本机 `.env` 或环境变量读取（不入库） |
 
 ## 数据源
 
 - 标的/分钟线：**微牛 Webull 沙盒**（只读行情）。
-- 依赖本机已有的 Webull 客户端封装：`量化/AutoFolio/scripts/webull_client.py`，以及沙盒密钥。
+- 仓库内置自包含数据层 `quant_data.py`，从本机 `.env` 或环境变量读取 `SANDBOX_APP_KEY / SANDBOX_APP_SECRET`（真实密钥**不入库**）。
+- 首次运行前：把 `.env.example` 复制为 `.env`，填入真实沙盒密钥（`.env` 已被 .gitignore 排除）。
 
 ## 运行
 
@@ -23,7 +25,7 @@ python META_kdj_options_backtest.py
 python META_末日期权模型回测.py
 ```
 
-> 注：脚本中引用的数据层/密钥路径是**本机相对工程**路径；拉取数据需要本机沙盒密钥，见下方安全说明。
+> 脚本不再依赖本机 AutoFolio / skill 目录；拉取数据只需本机 `.env` 里有沙盒密钥（真实密钥勿提交）。
 
 ## 安全说明（重要）
 
