@@ -26,6 +26,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 from quant_data import load_daily  # noqa: E402  自包含数据层
 
 

@@ -1,9 +1,10 @@
-# 核心依赖（META 量化回测脚本）
+# 运行 META 量化回测脚本所需依赖
+# Python >= 3.10
 numpy
 pandas
 requests
 webull-openapi-python-sdk
 
-# 可选：quant-backtest 数据层用到（A股/美股兜底）时会用到，可先不装
-# akshare
-# yfinance
+# 说明：
+# - 数据层 quant_data.py 只用 Webull 沙盒(webull-openapi-python-sdk)拉取 META 日线/M5
+# - 无需 akshare/yfinance；如需 A股/其它兜底数据可自行加装
