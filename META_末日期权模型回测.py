@@ -9,7 +9,12 @@ from __future__ import annotations
 import sys, math, time
 from datetime import datetime, time as dtime
 import numpy as np, pandas as pd
-sys.path.insert(0, "")
+import os
+# 可配置：AutoFolio 的 scripts 目录(含 webull_client 封装)
+_AUTOFOLIO = os.environ.get("AUTOFOLIO_SCRIPTS", r"")
+if not os.path.isdir(_AUTOFOLIO):
+    raise SystemExit("找不到 AutoFolio 的 scripts 目录(webull_client)。请设置环境变量 AUTOFOLIO_SCRIPTS 指向 AutoFolio/scripts")
+sys.path.insert(0, _AUTOFOLIO)
 from webull_client import WebullClient
 from webull.data.common.category import Category
 

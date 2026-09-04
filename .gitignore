@@ -2,9 +2,10 @@
 .env
 .env.*
 *.env
-!.env.example
 **/.env
 **/.env.*
+!**/.env.example
+!.env.example
 
 # ==== 敏感/本地密钥文件 ====
 *.key
